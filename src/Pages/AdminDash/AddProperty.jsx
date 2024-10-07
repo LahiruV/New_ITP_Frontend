@@ -37,24 +37,39 @@ const AddProperty = () => {
     }, []);
 
     const handleAdd = async () => {
-        const formData = new FormData();
-        formData.append("file", imageSelected);
-        formData.append("upload_preset", "ml_default");
-        formData.append("file", imageSelected2);
-        formData.append("upload_preset", "ml_default");
-        formData.append("file", imageSelected3);
-        formData.append("upload_preset", "ml_default");
-        formData.append("file", imageSelected4);
-        formData.append("upload_preset", "ml_default");
+        const formData1 = new FormData();
+        formData1.append("file", imageSelected);
+        formData1.append("upload_preset", "ml_default");
+        const formData2 = new FormData();
+        formData2.append("file", imageSelected2);
+        formData2.append("upload_preset", "ml_default");
+        const formData3 = new FormData();
+        formData3.append("file", imageSelected3);
+        formData3.append("upload_preset", "ml_default");
+        const formData4 = new FormData();
+        formData4.append("file", imageSelected4);
+        formData4.append("upload_preset", "ml_default");
         if (validateForm()) {
             try {
                 await axios.post(
                     "https://api.cloudinary.com/v1_1/dnomnqmne/image/upload",
-                    formData
-                ).then(await axios.post(
-                    `${configs.apiUrl}/properties/properties`, newObject,
-                    { headers: { 'Authorization': `Bearer ${token}` } }
-                ))
+                    formData1
+                ).then(
+                    await axios.post(
+                        "https://api.cloudinary.com/v1_1/dnomnqmne/image/upload",
+                        formData2
+                    )).then(
+                        await axios.post(
+                            "https://api.cloudinary.com/v1_1/dnomnqmne/image/upload",
+                            formData3
+                        )).then(
+                            await axios.post(
+                                "https://api.cloudinary.com/v1_1/dnomnqmne/image/upload",
+                                formData4
+                            )).then(await axios.post(
+                                `${configs.apiUrl}/properties/properties`, newObject,
+                                { headers: { 'Authorization': `Bearer ${token}` } }
+                            ))
                 Swal.fire({
                     title: "Success!",
                     text: "Added successfully.",
