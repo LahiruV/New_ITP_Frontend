@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../../Components/NavBar/Navbar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Container, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import configs from '../../config.js';
 import { GoogleMap, LoadScript, Marker, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
@@ -21,6 +21,8 @@ export default function Map() {
     const [destination, setDestination] = useState(null);
     const [directions, setDirections] = useState(null);
     const [selectedUni, setSelectedUni] = useState('All Universities');
+    const [distance, setDistance] = useState(null);
+    const [duration, setDuration] = useState(null);
     const uni = ['All Universities', 'Sliit University', 'Japura University', 'Ruhuna University', 'Sabaragamu University'];
 
     const fetchDetails = async () => {
@@ -53,17 +55,25 @@ export default function Map() {
         if (response !== null) {
             if (response.status === 'OK') {
                 setDirections(response);
+
+                // Extract distance and duration from the response
+                const route = response.routes[0].legs[0];
+                setDistance(route.distance.text);
+                setDuration(route.duration.text);
             } else {
                 console.error('Error fetching directions:', response);
             }
         }
     };
+
     const handleChange = (event) => {
         setSelectedUni(event.target.value);
     };
+
     const filteredAccommodations = selectedUni === 'All Universities'
         ? data
         : data.filter(post => post.area === selectedUni);
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Navbar />
@@ -130,6 +140,17 @@ export default function Map() {
                         )}
                     </GoogleMap>
                 </LoadScript>
+                {/* Display distance and duration */}
+                {distance && duration && (
+                    <div>
+                        <Typography variant="h6" sx={{ marginTop: '20px' }}>
+                            Distance: {distance}
+                        </Typography>
+                        <Typography variant="h6">
+                            Duration: {duration}
+                        </Typography>
+                    </div>
+                )}
             </Container>
         </ThemeProvider>
     );
