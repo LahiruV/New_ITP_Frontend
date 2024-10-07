@@ -37,7 +37,7 @@ export default function Property() {
     useEffect(() => {
         fetchDetails();
         localStorage.setItem('bookingProperty', null);
-    });
+    }, []);
 
     const filteredAccommodations = selectedUni === 'All Universities'
         ? post
